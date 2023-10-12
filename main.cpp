@@ -1,40 +1,56 @@
 #include <iostream>
-#include <string>
-
 using namespace std;
 
-class Action {
-public:
-    virtual void Perform() = 0;
-};
+class Square {
+protected:
+    double side;
 
-class Parrot : public Action {
 public:
-    void Perform() override {
-        cout << "Попугай: Привет!" << endl;
+    Square(double s) : side(s) {}
+
+    double getSide() const {
+        return side;
+    }
+
+    double area() const {
+        return side * side;
     }
 };
 
-class Airplane : public Action {
+class Circle {
+protected:
+    double radius;
+
 public:
-    void Perform() override {
-        cout << "Самолет: Полетели!" << endl;
+    Circle(double r) : radius(r) {}
+
+    double getRadius() const {
+        return radius;
+    }
+
+    double area() const {
+        return 3.14159265359 * radius * radius;
     }
 };
 
-void PerformAction(Action* action) {
-    action->Perform();
-}
+class InscribedCircle : public Square, public Circle {
+public:
+    InscribedCircle(double side) : Square(side), Circle(side / 2.0) {}
+
+    double getInscribedRadius() const {
+        return getSide() / 2.0;
+    }
+
+    double area() const {
+        return 3.14159265359 * getInscribedRadius() * getInscribedRadius();
+    }
+};
 
 int main() {
-    Parrot parrot;
-    Airplane airplane;
+    InscribedCircle inscribedCircle(4.0);
 
-    cout << "Вызов функции с объектом Попугая:" << endl;
-    PerformAction(&parrot);
-
-    cout << "\nВызов функции с объектом Самолета:" << endl;
-    PerformAction(&airplane);
+    cout << "Площадь квадрата: " << inscribedCircle.Square::area() << endl;
+    cout << "Площадь вписанной окружности: " << inscribedCircle.area() << endl;
 
     return 0;
 }
